@@ -22,13 +22,15 @@ Our focus in this milestone is **exploratory data analysis (EDA)** to understand
 - `DOLocationID` → Drop-off zone ID (categorical)  
 - `trip_miles` → Distance in miles (continuous)  
 - `trip_time` → Duration in seconds (continuous)  
-- `base_passenger_fare` → Base passenger fare before tips/tolls/fees (**target**)  
+- `base_passenger_fare` → Base passenger fare before any tips, tolls, fees, etc. (continuous, **target**)  
 - `tips` → Tip amount (continuous)  
-- `tolls` → Tolls paid (continuous)  
-- `driver_pay` → Driver’s base pay for the trip (continuous)  
-- `congestion_surcharge` → Extra NYC congestion fee (continuous)  
-- `airport_fee` → Flat $2.50 for airport pickups/drop-offs (continuous)  
-
+- `tolls` → Tolls paid (these are passed to the rider) (continuous)
+- `driver_pay` → Driver’s base pay for the trip, not including tips (continuous)
+- `cbd_congestion_fee` → New 2025 additional fee imposed on drivers in NYC, passed directly to the rider (continuous)
+- `bcf` - Contributions to the black car fund, Uber's fund to pay for driver work benefits, also passed directly to the rider as a 2.5% surcharge of total fare (continuous)
+- `congestion_surcharge`  → Surcharge passed to rider (continuous)
+- `airport_fee`  → a flat $2.50 fee for pickup or dropoff to airports around NYC
+- `shared_request_flag`  → cheaper pricing for riders who accept rideshare, allowing multiple unaffiliated riders to share a ride (categorical)
 ---
 
 ##[Uber Data Analytics Colab Notebook](https://colab.research.google.com/github/annajliu110101/Uber-Driver-Pay-Algorithm/blob/main/notebooks/Exploration.ipynb)  
