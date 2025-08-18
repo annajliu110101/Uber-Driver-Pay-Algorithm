@@ -31,6 +31,10 @@ Our focus in this milestone is **exploratory data analysis (EDA)** to understand
 
 ---
 
+[Uber Data Analytics Colab Notebook](https://colab.research.google.com/github/annajliu110101/Uber-Driver-Pay-Algorithm/blob/main/notebooks/Exploration.ipynb)  
+
+---
+
 ## 📊 Exploratory Data Analysis (EDA)
 
 We performed an initial EDA to better understand our dataset. Below are the three key plots:
