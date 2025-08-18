@@ -49,3 +49,17 @@ To reproduce our work, install the following:
 Install dependencies via:
 ```bash
 pip install pandas numpy matplotlib seaborn scikit-learn
+```
+
+
+Pre-Processing Data:
+- Filter scope of dataset to Uber-only and dropping rows containing Lyft Data.
+- Drop platform-specific fields unrelevant to data goals
+- Drop rows with essential data missing
+- 
+- Add derived columns:
+    - 'driver_take_home' = driver pay + tips
+    - 'final_passenger_fare' = The final charge to the passenger's payment method; including tolls, tips, fees, etc.  Added to better reflect the actual cost of taking an Uber
+    - 'trip_profit' = Difference between cost to operate ride (driver's pay) and the payment from passenger.
+- Create views of dataframes to prevent 
+- Set columns with discrete data as categorical to ensure downstream processing does not read as continuous 
