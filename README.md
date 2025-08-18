@@ -58,7 +58,7 @@ A density-based visualization of **trip time vs. base passenger fare**, with **d
 
 
 
-Pre-Processing Data:
+## 🔧 Pre-Processing Data Plan:
 - Filter scope of dataset to Uber-only and dropping rows containing Lyft Data.
 - Drop platform-specific fields unrelevant to data goals
 - Drop rows with essential data missing
