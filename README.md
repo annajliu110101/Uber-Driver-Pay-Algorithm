@@ -1,18 +1,19 @@
-# Uber Fare Prediction – Group Project for CSE 151A
+# Uber Fare Prediction – Milestone 2
 
 ## 📄 Abstract
-We will be using the **Uber NYC For-Hire Vehicles Trip Data (2025)** dataset, which contains over 175 million trip records per month across New York City, including dispatching base license numbers, pickup and drop-off zones, trip distances, durations, and fare details such as base passenger fare, tips, tolls, and driver pay. Our project applies **decision tree regression** to uncover non-linear relationships between ride features and fare amounts, with the goal of identifying the key attributes that influence pricing. By analyzing temporal, spatial, and trip-specific features, we aim to uncover patterns such as peak-hour surcharges, distance-based pricing, and zone-specific fare differences. The interpretable structure of decision trees will enable us to highlight the most influential factors in fare variation, producing a model that both predicts fares accurately and provides insights into price-optimization strategies for ride-hailing services.
+For Milestone 2, we continue working with the **Uber NYC For-Hire Vehicles Trip Data (2025)**.  
+Due to file size limitations, we are currently analyzing only **January 2025** trip data as a representative subset, while the full dataset (12 months) will be used later for training and testing.  
+
+Our focus in this milestone is **exploratory data analysis (EDA)** to understand the relationships between trip characteristics and fare amounts. We specifically look at how variables such as distance, time, tips, tolls, and driver pay influence the **base passenger fare**. The analysis helps uncover pricing dynamics like peak-hour surcharges, distance-based pricing, and spatial-temporal patterns.
 
 ---
 
 ## 📌 Dataset
-- **Source:** [Uber NYC For-Hire Vehicles Trip Data 2021 – Kaggle](https://www.kaggle.com/datasets/shuhengmo/uber-nyc-forhire-vehicles-trip-data-2021), [https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page]
-- **Official Documentation:** [NYC TLC Trip Record Data Dictionary](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)  
-- **Data Dictionary:** `data_dictionary_trip_records_hvfhs.pdf`  
-- **File Example:** `fhvhv_tripdata_2021-01.parquet`  
-- **Size:** ~11,908,468 rows × 24 columns (per month)  
+- **Source:** [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)  
 - **Format:** Parquet  
-- **Scope:** High Volume For-Hire Service trips using Uber in NYC for 2025  
+- **Subset Used for Milestone 2:** `fhvhv_tripdata_2025-01.parquet`  
+- **Size:** ~15,356,455 rows × 12 columns (January 2025 only)  
+- **Scope:** High Volume For-Hire Service (Uber) trips in NYC  
 
 ### Features
 - `pickup_datetime` → Trip start time (temporal)  
@@ -21,15 +22,35 @@ We will be using the **Uber NYC For-Hire Vehicles Trip Data (2025)** dataset, wh
 - `DOLocationID` → Drop-off zone ID (categorical)  
 - `trip_miles` → Distance in miles (continuous)  
 - `trip_time` → Duration in seconds (continuous)  
-- `base_passenger_fare` → Base passenger fare before any tips, tolls, fees, etc. (continuous, **target**)  
+- `base_passenger_fare` → Base passenger fare before tips/tolls/fees (**target**)  
 - `tips` → Tip amount (continuous)  
-- `tolls` → Tolls paid (these are passed to the rider) (continuous)
-- `driver_pay` → Driver’s base pay for the trip, not including tips (continuous)
-- `cbd_congestion_fee` → New 2025 additional fee imposed on drivers in NYC, passed directly to the rider (continuous)
-- `bcf` - Contributions to the black car fund, Uber's fund to pay for driver work benefits, also passed directly to the rider as a 2.5% surcharge of total fare (continuous)
-- `congestion_surcharge`  → Surcharge passed to rider (continuous)
-- `airport_fee`  → a flat $2.50 fee for pickup or dropoff to airports around NYC
-- `shared_request_flag`  → cheaper pricing for riders who accept rideshare, allowing multiple unaffiliated riders to share a ride (categorical)
+- `tolls` → Tolls paid (continuous)  
+- `driver_pay` → Driver’s base pay for the trip (continuous)  
+- `congestion_surcharge` → Extra NYC congestion fee (continuous)  
+- `airport_fee` → Flat $2.50 for airport pickups/drop-offs (continuous)  
+
+---
+
+## 📊 Exploratory Data Analysis (EDA)
+
+We performed an initial EDA to better understand our dataset. Below are the three key plots:
+
+### 1. Correlation Matrix
+Shows correlations between numerical variables such as trip distance, trip time, fares, tips, and driver pay. This helps identify which variables are strongly related to passenger fares.  
+![Correlation Matrix](figures/correlation_matrix.png)
+
+---
+
+### 2. Scatter Plot with Linear Regression
+Displays the relationship between **trip miles** and **base passenger fare**, with a regression line. We observe a strong positive correlation: longer distances lead to higher fares.  
+![Trip Distance vs Cost](figures/linear_regression_tripmiles_fare.png)
+
+---
+
+### 3. Hexbin Heatmap
+A density-based visualization of **trip time vs. base passenger fare**, with **driver pay** as the color dimension. This shows clustering of short trips with low fares, while longer trips (30–60 minutes) yield higher fares and driver pay.  
+![Hexbin Heatmap](figures/hexbin_triptime_fare_driverpay.png)
+
 ---
 
 ## ⚙️ Environment Setup
@@ -42,10 +63,9 @@ To reproduce our work, install the following:
   - `numpy`  
   - `matplotlib`  
   - `seaborn`  
-  - `scikit-learn`
+  - `scikit-learn`  
   - `pyarrow`
-
 
 Install dependencies via:
 ```bash
-pip install pandas numpy matplotlib seaborn scikit-learn
+pip install pandas numpy matplotlib seaborn scikit-learn pyarrow
