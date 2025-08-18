@@ -37,19 +37,22 @@ We performed an initial EDA to better understand our dataset. Below are the thre
 
 ### 1. Correlation Matrix
 Shows correlations between numerical variables such as trip distance, trip time, fares, tips, and driver pay. This helps identify which variables are strongly related to passenger fares.  
-![Correlation Matrix](figures/correlation_matrix.png)
+<img width="903" height="803" alt="image" src="https://github.com/user-attachments/assets/e7345391-1699-4cdc-ac89-153f1e188a45" />
+
 
 ---
 
 ### 2. Scatter Plot with Linear Regression
 Displays the relationship between **trip miles** and **base passenger fare**, with a regression line. We observe a strong positive correlation: longer distances lead to higher fares.  
-![Trip Distance vs Cost](figures/linear_regression_tripmiles_fare.png)
+<img width="630" height="470" alt="image" src="https://github.com/user-attachments/assets/e8be7d24-680e-4c4a-ac75-d4f606cbc0d8" />
+
 
 ---
 
 ### 3. Hexbin Heatmap
 A density-based visualization of **trip time vs. base passenger fare**, with **driver pay** as the color dimension. This shows clustering of short trips with low fares, while longer trips (30–60 minutes) yield higher fares and driver pay.  
-![Hexbin Heatmap](figures/hexbin_triptime_fare_driverpay.png)
+<img width="753" height="590" alt="image" src="https://github.com/user-attachments/assets/a83f8404-87da-4cbe-8603-5ee3f7f3d324" />
+)
 
 ---
 
