@@ -21,7 +21,7 @@ We will be using the **Uber NYC For-Hire Vehicles Trip Data (2021)** dataset, wh
 - `DOLocationID` → Drop-off zone ID (categorical)  
 - `trip_miles` → Distance in miles (continuous)  
 - `trip_time` → Duration in seconds (continuous)  
-- `base_passenger_fare` → Base passenger fare (continuous, **target**)  
+- `base_passenger_fare` → Base passenger fare before any tips, tolls, fees, etc. (continuous, **target**)  
 - `tips` → Tip amount (continuous)  
 - `tolls` → Tolls paid (these are passed to the rider) (continuous)
 - `driver_pay` → Driver’s base pay for the trip, not including tips (continuous)
