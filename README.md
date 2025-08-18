@@ -6,17 +6,15 @@ We will be using the **Uber NYC For-Hire Vehicles Trip Data (2021)** dataset, wh
 ---
 
 ## 📌 Dataset
-- **Source:** [Uber NYC For-Hire Vehicles Trip Data 2021 – Kaggle](https://www.kaggle.com/datasets/shuhengmo/uber-nyc-forhire-vehicles-trip-data-2021)  
+- **Source:** [Uber NYC For-Hire Vehicles Trip Data 2021 – Kaggle](https://www.kaggle.com/datasets/shuhengmo/uber-nyc-forhire-vehicles-trip-data-2021), [https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page]
 - **Official Documentation:** [NYC TLC Trip Record Data Dictionary](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)  
 - **Data Dictionary:** `data_dictionary_trip_records_hvfhs.pdf`  
 - **File Example:** `fhvhv_tripdata_2021-01.parquet`  
 - **Size:** ~11,908,468 rows × 24 columns (per month)  
 - **Format:** Parquet  
-- **Scope:** High Volume For-Hire Service trips (Uber, Lyft, Via, etc.) in NYC for 2021  
+- **Scope:** High Volume For-Hire Service trips (Uber, Lyft, Via, etc.) in NYC for 2025  
 
-### Key Features (from TLC dictionary)
-- `hvfhs_license_num` → High volume base license number (categorical)  
-- `dispatching_base_num` → Dispatching base ID (categorical)  
+### Features
 - `pickup_datetime` → Trip start time (temporal)  
 - `dropoff_datetime` → Trip end time (temporal)  
 - `PULocationID` → Pickup zone ID (categorical)  
@@ -25,9 +23,13 @@ We will be using the **Uber NYC For-Hire Vehicles Trip Data (2021)** dataset, wh
 - `trip_time` → Duration in seconds (continuous)  
 - `base_passenger_fare` → Base passenger fare (continuous, **target**)  
 - `tips` → Tip amount (continuous)  
-- `tolls` → Tolls paid (continuous)  
-- `driver_pay` → Driver’s pay for the trip (continuous)  
-
+- `tolls` → Tolls paid (these are passed to the rider) (continuous)
+- `driver_pay` → Driver’s base pay for the trip, not including tips (continuous)
+- `cbd_congestion_fee` → New 2025 additional fee imposed on drivers in NYC, passed directly to the rider (continuous)
+- `bcf` - Contributions to the black car fund, Uber's fund to pay for driver work benefits, also passed directly to the rider as a 2.5% surcharge of total fare (continuous)
+- `congestion_surcharge`  → Surcharge passed to rider (continuous)
+- `airport_fee`  → a flat $2.50 fee for pickup or dropoff to airports around NYC
+- `shared_request_flag`  → cheaper pricing for riders who accept rideshare, allowing multiple unaffiliated riders to share a ride (categorical)
 ---
 
 ## ⚙️ Environment Setup
@@ -40,7 +42,9 @@ To reproduce our work, install the following:
   - `numpy`  
   - `matplotlib`  
   - `seaborn`  
-  - `scikit-learn`  
+  - `scikit-learn`
+  - `pyarrow`
+
 
 Install dependencies via:
 ```bash
