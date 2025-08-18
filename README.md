@@ -1,7 +1,7 @@
 # Uber Fare Prediction – Group Project for CSE 151A
 
 ## 📄 Abstract
-We will be using the **Uber NYC For-Hire Vehicles Trip Data (2021)** dataset, which contains over 11 million trip records per month across New York City, including dispatching base license numbers, pickup and drop-off zones, trip distances, durations, and fare details such as base passenger fare, tips, tolls, and driver pay. Our project applies **decision tree regression** to uncover non-linear relationships between ride features and fare amounts, with the goal of identifying the key attributes that influence pricing. By analyzing temporal, spatial, and trip-specific features, we aim to uncover patterns such as peak-hour surcharges, distance-based pricing, and zone-specific fare differences. The interpretable structure of decision trees will enable us to highlight the most influential factors in fare variation, producing a model that both predicts fares accurately and provides insights into price-optimization strategies for ride-hailing services.
+We will be using the **Uber NYC For-Hire Vehicles Trip Data (2025)** dataset, which contains over 175 million trip records per month across New York City, including dispatching base license numbers, pickup and drop-off zones, trip distances, durations, and fare details such as base passenger fare, tips, tolls, and driver pay. Our project applies **decision tree regression** to uncover non-linear relationships between ride features and fare amounts, with the goal of identifying the key attributes that influence pricing. By analyzing temporal, spatial, and trip-specific features, we aim to uncover patterns such as peak-hour surcharges, distance-based pricing, and zone-specific fare differences. The interpretable structure of decision trees will enable us to highlight the most influential factors in fare variation, producing a model that both predicts fares accurately and provides insights into price-optimization strategies for ride-hailing services.
 
 ---
 
@@ -12,7 +12,7 @@ We will be using the **Uber NYC For-Hire Vehicles Trip Data (2021)** dataset, wh
 - **File Example:** `fhvhv_tripdata_2021-01.parquet`  
 - **Size:** ~11,908,468 rows × 24 columns (per month)  
 - **Format:** Parquet  
-- **Scope:** High Volume For-Hire Service trips (Uber, Lyft, Via, etc.) in NYC for 2025  
+- **Scope:** High Volume For-Hire Service trips using Uber in NYC for 2025  
 
 ### Features
 - `pickup_datetime` → Trip start time (temporal)  
