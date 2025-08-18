@@ -33,7 +33,7 @@ Our focus in this milestone is **exploratory data analysis (EDA)** to understand
 - `shared_request_flag`  → cheaper pricing for riders who accept rideshare, allowing multiple unaffiliated riders to share a ride (categorical)
 ---
 
-##[Uber Data Analytics Colab Notebook](https://colab.research.google.com/github/annajliu110101/Uber-Driver-Pay-Algorithm/blob/main/notebooks/Exploration.ipynb)  
+## [Uber Data Analytics Colab Notebook](https://colab.research.google.com/github/annajliu110101/Uber-Driver-Pay-Algorithm/blob/main/notebooks/Exploration.ipynb)  
 
 ---
 
