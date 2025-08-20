@@ -1,2 +1,9 @@
 .DS_Store
-data/.DS_Store
+data/uber_nyc_forhire_2025/.DS_Store
+data/uber_nyc_forhire_2025/taxi_zones/taxi_zones.dbf
+data/uber_nyc_forhire_2025/taxi_zones/taxi_zones.prj
+data/uber_nyc_forhire_2025/taxi_zones/taxi_zones.shx
+data/uber_nyc_forhire_2025/taxi_zones/taxi_zones.shp.xml
+data/uber_nyc_forhire_2025/taxi_zones/taxi_zones.shp
+data/uber_nyc_forhire_2025/taxi_zones/taxi_zones.sbn
+data/uber_nyc_forhire_2025/data_dictionary_trip_records_hvfhs.pdf
