@@ -6,7 +6,7 @@ We will be using the **Uber NYC For-Hire Vehicles Trip Data (2025)** dataset, wh
 ---
 
 ## 📌 Dataset
-- **Source:** [Uber NYC For-Hire Vehicles Trip Data 2021 – Kaggle](https://www.kaggle.com/datasets/shuhengmo/uber-nyc-forhire-vehicles-trip-data-2021), [https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page]
+- **Source:** [[Uber NYC For-Hire Vehicles Trip Data 2024-2025 – Kaggle](https://www.kaggle.com/datasets/annajliu/uber-2024-2025-nyc-dataset/data)][https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page]
 - **Official Documentation:** [NYC TLC Trip Record Data Dictionary](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)  
 - **Data Dictionary:** `data_dictionary_trip_records_hvfhs.pdf`  
 - **File Example:** `fhvhv_tripdata_2021-01.parquet`  
