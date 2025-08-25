@@ -83,6 +83,18 @@ The deeper model showed consistently lower RMSE across training, validation, and
 
 ---
 
+## 📂 Code Files
+
+The core implementation for this milestone is provided in two Python scripts:
+
+- [`decisiontree-4.py`](https://github.com/annajliu110101/Uber-Driver-Pay-Algorithm/blob/Milestone3/decisiontree-4.py)  
+  Contains the full Decision Tree / XGBoost regression pipeline, hyperparameter tuning, model evaluation, and feature importance analysis.
+
+- [`pre_processing-2.py`](https://github.com/annajliu110101/Uber-Driver-Pay-Algorithm/blob/Milestone3/pre_processing-2.py)  
+  Handles preprocessing of the Uber NYC dataset including filtering, feature engineering, and schema alignment across parquet files.
+
+---
+
 ## 🔧 Environment Setup
 To reproduce:
 ```bash
