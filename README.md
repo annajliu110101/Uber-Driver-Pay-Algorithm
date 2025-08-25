@@ -65,7 +65,6 @@ The deeper model showed consistently lower RMSE across training, validation, and
 
 <img width="780" height="498" alt="image" src="https://github.com/user-attachments/assets/3f58ee4a-e61b-448b-9203-f44f36c08770" />
 
-
 ---
 
 ### Final Model Performance (Best depth = 12)
@@ -83,15 +82,41 @@ The deeper model showed consistently lower RMSE across training, validation, and
 
 ---
 
+## 🔍 Model Fit Analysis
+We originally tested **max_depth values from 1 to 20**, which gave a clear picture of underfitting vs. overfitting:  
+- Depths 1–5: **Underfit** (high bias, high error).  
+- Depths 16–20: **Overfit** (validation error increasing).  
+- Depths 10–15: **Best balance**.  
+
+➡️ The chosen model at depth 12 sits in the **sweet spot** of the fitting curve: not underfit, not overfit.  
+
+➡️ **Next models to try:**  
+- **SVMs** → margin-based performance, robustness to outliers.  
+- **KNNs** → distance-based regression comparison.  
+- **Naive Bayes** → lightweight categorical baseline.  
+
+---
+
+## 📝 Conclusion
+Our first decision tree model (XGBoost, GPU) achieved:  
+- **Best depth:** 12  
+- **Final Test RMSE:** ~$9.83  
+- **Key drivers:** distance category, trip miles, and trip time.  
+
+This confirms that **distance and geography dominate fare prediction**, while temporal features play a smaller role.  
+
+➡️ **Future improvements:**  
+- Add **regularization** to reduce overfitting.  
+- Bring in **external data** (weather, traffic, surge pricing).  
+- Try **ensembles** (Random Forest, Gradient Boosting, stacking).  
+
+This model establishes a strong baseline for fare prediction and prepares us for deeper experimentation in Milestone 4.  
+
+---
+
 ## 📂 Code Files
-
-The core implementation for this milestone is provided in two Python scripts:
-
 - [`decisiontree-4.py`](https://github.com/annajliu110101/Uber-Driver-Pay-Algorithm/blob/Milestone3/decisiontree-4.py)  
-  Contains the full Decision Tree / XGBoost regression pipeline, hyperparameter tuning, model evaluation, and feature importance analysis.
-
 - [`pre_processing-2.py`](https://github.com/annajliu110101/Uber-Driver-Pay-Algorithm/blob/Milestone3/pre_processing-2.py)  
-  Handles preprocessing of the Uber NYC dataset including filtering, feature engineering, and schema alignment across parquet files.
 
 ---
 
