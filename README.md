@@ -1,52 +1,128 @@
-# Uber Fare Prediction – Group Project for CSE 151A
+# Uber Fare Prediction – Milestone 3
 
 ## 📄 Abstract
-We will be using the **Uber NYC For-Hire Vehicles Trip Data (2025)** dataset, which contains over 175 million trip records per month across New York City, including dispatching base license numbers, pickup and drop-off zones, trip distances, durations, and fare details such as base passenger fare, tips, tolls, and driver pay. Our project applies **decision tree regression** to uncover non-linear relationships between ride features and fare amounts, with the goal of identifying the key attributes that influence pricing. By analyzing temporal, spatial, and trip-specific features, we aim to uncover patterns such as peak-hour surcharges, distance-based pricing, and zone-specific fare differences. The interpretable structure of decision trees will enable us to highlight the most influential factors in fare variation, producing a model that both predicts fares accurately and provides insights into price-optimization strategies for ride-hailing services.
+For Milestone 3, we move from EDA to **supervised modeling** on the NYC TLC High-Volume For-Hire Vehicle (Uber) data (2024–2025).  
+Our goal is to predict **base passenger fare** using engineered temporal, spatial, and ride features. This milestone delivers:
+- completed preprocessing & feature engineering,
+- a first model (decision tree–based XGBoost regressor),
+- hyperparameter tuning and fitting analysis (under/overfitting),
+- evaluation on train/validation/test splits,
+- conclusions and next-step plans.
 
 ---
 
 ## 📌 Dataset
-- **Source:** [[Uber NYC For-Hire Vehicles Trip Data 2024-2025 – Kaggle](https://www.kaggle.com/datasets/annajliu/uber-2024-2025-nyc-dataset/data)][https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page]
-- **Official Documentation:** [NYC TLC Trip Record Data Dictionary](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)  
-- **Data Dictionary:** `data_dictionary_trip_records_hvfhs.pdf`  
-- **File Example:** `fhvhv_tripdata_2021-01.parquet`  
-- **Size:** ~11,908,468 rows × 24 columns (per month)  
+- **Source:** [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)  
 - **Format:** Parquet  
-- **Scope:** High Volume For-Hire Service trips using Uber in NYC for 2025  
+- **Scope Available:** Aug 2024 → Jun 2025 (~163M trips combined)  
+- **Subset Used for training in this milestone:** one monthly file (~15M rows)
 
-### Features
-- `pickup_datetime` → Trip start time (temporal)  
-- `dropoff_datetime` → Trip end time (temporal)  
-- `PULocationID` → Pickup zone ID (categorical)  
-- `DOLocationID` → Drop-off zone ID (categorical)  
-- `trip_miles` → Distance in miles (continuous)  
-- `trip_time` → Duration in seconds (continuous)  
-- `base_passenger_fare` → Base passenger fare before any tips, tolls, fees, etc. (continuous, **target**)  
-- `tips` → Tip amount (continuous)  
-- `tolls` → Tolls paid (these are passed to the rider) (continuous)
-- `driver_pay` → Driver’s base pay for the trip, not including tips (continuous)
-- `cbd_congestion_fee` → New 2025 additional fee imposed on drivers in NYC, passed directly to the rider (continuous)
-- `bcf` - Contributions to the black car fund, Uber's fund to pay for driver work benefits, also passed directly to the rider as a 2.5% surcharge of total fare (continuous)
-- `congestion_surcharge`  → Surcharge passed to rider (continuous)
-- `airport_fee`  → a flat $2.50 fee for pickup or dropoff to airports around NYC
-- `shared_request_flag`  → cheaper pricing for riders who accept rideshare, allowing multiple unaffiliated riders to share a ride (categorical)
+**Core fields**
+- Temporal: `pickup_datetime`, `dropoff_datetime`, `request_datetime`  
+- Ride: `trip_miles`, `trip_time`  
+- Locations: `PULocationID`, `DOLocationID`  
+- **Target:** `base_passenger_fare`
+
 ---
 
-## ⚙️ Environment Setup
-To reproduce our work, install the following:
+## 🔧 Preprocessing & Feature Engineering
+1. **Filtering**
+   - Keep Uber HV0003 trips (handled upstream in preprocessing pipeline).
+   - Remove invalid zones: `PULocationID=264`, `DOLocationID=265`.
 
-- Python 3.9+  
-- Jupyter Notebook  
-- Required packages:  
-  - `pandas`  
-  - `numpy`  
-  - `matplotlib`  
-  - `seaborn`  
-  - `scikit-learn`
-  - `pyarrow`
+2. **Temporal expansions**
+   - `request_hour`, `request_weekday`, `pickup_hour`, `pickup_weekday`.
 
+3. **Derived signals**
+   - `wait_time_seconds = pickup_datetime – request_datetime`.
+   - Rush-hour flags: `morning_rush` (7–9), `evening_rush` (17–19), `late_night` (22–5), `weekend`.
 
-Install dependencies via:
+4. **Binning (feature expansion)**
+   - `distance_category` from `trip_miles`.
+   - `duration_category` from `trip_time`.
+
+5. **Categorical encoding**
+   - One-hot of **top 20** pickup zones and **top 20** dropoff zones.
+
+**Final feature count:** **53** (for the training subset).
+
+---
+
+## 🤖 Model 1 — Decision Tree (XGBoost Regressor)
+- **Model:** `XGBRegressor` (tree-based gradient boosting)
+- **Acceleration:** `tree_method=hist`, `device=cuda:0`
+- **Tuning sweep:** `max_depth ∈ [10, 14]` (validated)
+- **Fixed params during sweep:** `n_estimators=150`, `learning_rate=0.08`, `subsample=0.8`, `colsample_bytree=0.8`
+
+### 📈 Key Results
+- **Best depth:** **12**  
+- **Validation behavior:** error decreases up to depth ≈ 12, then begins to rise (overfitting).  
+- **Test metrics (final model, depth=12):**  
+  - **MSE:** **96.62**  
+  - **RMSE:** **$9.83**
+
+---
+
+## 🧪 Fitting Analysis (Under/Overfitting)
+- **Shallow trees (depth ≤ 5):** **Underfitting** (high bias; higher Val MSE).  
+- **Depth = 12:** **Balanced** (lowest Val MSE; best generalization).  
+- **Deeper trees (depth ≥ 13):** **Overfitting** (Val MSE begins to increase).
+
+> Second-model comparison: we explicitly compare a **shallow** model (e.g., `max_depth=2`) vs. the **best** (`max_depth=12`) and report Train/Val/Test RMSE to illustrate bias–variance tradeoff. (See table/plot placeholders below; fill after running the code that saves figures.)
+
+---
+
+## 📊 Feature Importance (Final Model)
+Top drivers of predicted fare:
+1. `distance_category`  
+2. `trip_miles`  
+3. `DOLocationID_265`  
+4. `duration_category`  
+5. `trip_time`  
+
+Location one-hots rank highly as well, indicating strong **spatial pricing** effects.
+
+---
+
+## 📷 Visuals (to be added after generating figures)
+Add these files to the repo under `figures/` and they’ll render inline.
+
+- **Validation error vs max depth**  
+  `![Validation Error vs Depth](figures/val_mse_vs_max_depth.png)`
+
+- **RMSE comparison: shallow vs best depth**  
+  `![Shallow vs Best RMSE](figures/rmse_shallow_vs_best.png)`  
+  CSV: `figures/rmse_shallow_vs_best.csv`
+
+- **Top-20 feature importances (final model)**  
+  `![Top-20 Importances](figures/feature_importance_top20.png)`
+
+*(Optional single summary panel: `figures/milestone3_summary.png`)*
+
+---
+
+## ✅ Conclusion
+- Our first decision tree–based model (XGBoost) achieves **Test RMSE ≈ $9.83** on ~1.43M held-out trips.  
+- **Distance**, **duration**, and **spatial** features dominate fare prediction.  
+- Depth tuning shows the classic U-shape validation curve; **depth=12** offers the best balance.
+
+### Next Models / Improvements
+- Extend tuning grid (`n_estimators`, `learning_rate`, regularization).  
+- Add richer temporal context (holidays, surge windows, weather).  
+- Benchmark additional models per assignment: **KNN**, **SVM (RBF)**, **Naive Bayes** (for binned-fare classification), **Decision Trees/Random Forest** variants.  
+- Scale out to all months for robustness; evaluate per-slice (airport vs. city, rush vs. off-peak).
+
+---
+
+## ⚙️ Repro (local or Codespaces)
 ```bash
-pip install pandas numpy matplotlib seaborn scikit-learn
-```
+# minimal environment
+pip install polars pandas scikit-learn xgboost matplotlib pyarrow
+
+# run training (generates figures into ./figures)
+python decisiontree.py
+
+# commit visuals
+git add figures/*.png figures/*.csv
+git commit -m "Add milestone 3 visuals"
+git push
