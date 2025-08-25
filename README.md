@@ -1,97 +1,91 @@
 # Uber Fare Prediction – Milestone 3
 
 ## 📄 Abstract
-For Milestone 3, we trained our first supervised model on the **Uber NYC For-Hire Vehicles Trip Data (2025)**.  
-The focus was to preprocess the dataset, engineer meaningful features, train a baseline model, and evaluate its performance on predicting **base passenger fare**.  
+For Milestone 3, we extend our work on the **Uber NYC For-Hire Vehicles Trip Data (2024–2025)** by moving from exploratory analysis to **predictive modeling**.  
+We focus on building a **GPU-accelerated Decision Tree Regression model (XGBoost)** to predict **base passenger fare** using trip and contextual features.  
 
-We implemented a **GPU-accelerated Decision Tree Regressor (XGBoost)**, tuning the tree depth (`max_depth`) to study underfitting vs. overfitting.  
+This milestone highlights **feature engineering, hyperparameter tuning, and model performance evaluation** on a large-scale dataset.
 
 ---
 
 ## 📌 Dataset
 - **Source:** [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)  
-- **Subset Used:** `fhvhv_tripdata_2025-01.parquet` (~15.3M rows)  
-- **Scope:** Uber trips only, filtered to exclude invalid pickup/dropoff zones.  
+- **Subset Used for Milestone 3:** `fhvhv_tripdata_2024-07.parquet`  
+- **Size:** ~14,328,242 rows × 53 features  
+- **Scope:** High Volume For-Hire Service (Uber) trips in NYC  
 
-### Features Used
-- Temporal: `request_hour`, `pickup_hour`, `request_weekday`, `pickup_weekday`  
-- Ride context: `wait_time_seconds`, `morning_rush`, `evening_rush`, `late_night`, `weekend`  
-- Trip measures: `trip_miles`, `trip_time`, `distance_category`, `duration_category`  
-- Spatial: Top 20 most frequent `PULocationID` and `DOLocationID` (one-hot encoded)  
+### Features
+Engineered features included:
+- Temporal: `request_hour`, `request_weekday`, `pickup_hour`, `pickup_weekday`  
+- Derived: `wait_time_seconds`, rush-hour flags, weekend flag  
+- Distance & Duration categories  
+- Top 20 pickup/dropoff location one-hot features  
 
-**Target:** `base_passenger_fare`
-
----
-
-## 🔧 Pre-Processing
-1. Filtered Uber-only trips (`hvfhs_license_num = HV0003`) and removed rows with invalid location IDs.  
-2. Converted timestamps into numeric and categorical features (hour, weekday, rush-hour indicators).  
-3. Engineered categorical distance & duration bins.  
-4. One-hot encoded top 20 pickup and dropoff zones.  
-5. Final feature set: **53 features**.  
+**Target Variable:**  
+- `base_passenger_fare` (continuous)
 
 ---
 
-## 🚀 Model Training
-We trained a **Decision Tree Regressor (XGBoost, GPU-accelerated)**.  
+## ⚙️ Pre-Processing
+Steps included:
+1. **Filtering** invalid zones (`PULocationID=264`, `DOLocationID=265`).  
+2. **Feature engineering** for temporal, categorical, and ride-based patterns.  
+3. **One-hot encoding** top pickup and dropoff locations.  
+4. Train/validation/test split (80/10/10).  
 
-- Training set: ~11.5M samples  
-- Validation set: ~1.4M samples  
-- Test set: ~1.4M samples  
+---
 
-We originally tested **depths from 1 to 20**, and consistently found that the best-performing models had `max_depth` values between **10 and 15**.  
-To save training time and GPU resources, we narrowed the search space in later runs to this range.  
+## 🚀 Modeling
+
+We used **XGBoost Regressor with GPU acceleration** (`tree_method='hist', device='cuda:0'`).  
+Hyperparameter tuning focused on the **max_depth** parameter, which controls tree complexity.  
+
+### Depth Search Strategy
+- Originally tested **depths 1 → 20**.  
+- Found best models consistently in **10 → 15** range.  
+- To save compute time, narrowed tuning to that range.  
+- Final best depth was **12**.  
 
 ---
 
 ## 📊 Results
 
-### Validation Error vs. max_depth
-The plot below shows validation MSE across different tree depths.  
-Depth = **12** achieved the best tradeoff between underfitting and overfitting.  
+### 1. Validation Error vs. Depth
+We tested multiple depths, finding that validation error minimized at **depth=12**.  
 
-<img width="1600" height="1000" alt="val_mse_vs_max_depth" src="https://github.com/user-attachments/assets/edd7d2a5-88bb-44d2-818c-625c2bf3a5a6" />
+<img width="1600" height="1000" alt="val_mse_vs_max_depth" src="https://github.com/user-attachments/assets/9a0497f4-6856-4b5a-adc7-51136d24b2cb" />
+  
+*(Generated from July 2024 dataset, ~14.3M rows)*
+
+---
+
+### 2. Shallow vs. Best Depth Comparison
+We compared a shallow tree (`d=2`) vs. the best depth (`d=12`).  
+The deeper model showed consistently lower RMSE across training, validation, and testing.  
+
+<img width="780" height="498" alt="image" src="https://github.com/user-attachments/assets/3f58ee4a-e61b-448b-9203-f44f36c08770" />
 
 
 ---
 
-### Final Model Performance
-- **Best depth:** 12  
-- **Test MSE:** 96.62  
-- **Test RMSE:** $9.83  
-
-### Top Feature Importances
-1. `distance_category`  
-2. `trip_miles`  
-3. `DOLocationID_265`  
-4. `duration_category`  
-5. `trip_time`  
-
-Interpretation: Fare is most strongly driven by **distance-based features** and certain **pickup/dropoff hotspots**.  
+### Final Model Performance (Best depth = 12)
+- **Test MSE:** ~96.62  
+- **Test RMSE:** ~$9.83  
+- **Most important features:**  
+  - `distance_category`, `trip_miles`, `trip_time`, duration-related features, and specific pickup/dropoff zones.  
 
 ---
 
-## 📈 Model Fit Analysis
-- Shallow trees (`max_depth < 5`) → **underfit**, with high bias and poor predictive accuracy.  
-- Deep trees (`max_depth > 13`) → **overfit**, with validation error increasing.  
-- Optimal depth = **12**, balancing training vs. validation performance.  
+## 📈 Key Takeaways
+- Distance-based features dominate fare prediction.  
+- Temporal features (hour, weekday, rush-hour flags) and pickup/dropoff zones also play a key role.  
+- Narrowing the depth range (10–15) significantly reduced tuning time without sacrificing accuracy.  
 
 ---
 
-## 📝 Conclusion
-Our first supervised model demonstrates that **distance and time are the primary drivers of Uber fares**, but location-based effects also play a strong role.  
-The baseline RMSE of **$9.83** is a reasonable starting point given the dataset’s variability.  
-
-### Next Steps
-- Experiment with **Random Forests** or **Gradient Boosted Trees**.  
-- Add external features (e.g., **weather conditions, surge pricing flags**) for richer context.  
-- Perform hyperparameter tuning across learning rate, subsampling, and number of estimators.  
-
----
-
-## 📂 Repo & Notebooks
-- [Preprocessing Pipeline](./pre_processing.py)  
-- [Decision Tree Training](./decisiontree.py)  
-- [Colab Notebook (Milestone 3)](https://colab.research.google.com/github/annajliu110101/Uber-Driver-Pay-Algorithm/blob/Milestone3/notebooks/DecisionTree.ipynb)  
-
----
+## 🔧 Environment Setup
+To reproduce:
+```bash
+git clone https://github.com/annajliu110101/Uber-Driver-Pay-Algorithm.git
+cd Uber-Driver-Pay-Algorithm
+pip install -r requirements.txt
