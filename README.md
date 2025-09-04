@@ -57,5 +57,5 @@ This project was a collaborative effort between all group members. We additional
 
 ## Repository Links
 
-- Milestone 3 notebook (Model 1): [link-to-notebook]  
-- Milestone 4 notebook (Model 2): [notebooks/Model 2.ipynb]  
+- Milestone 4 notebook (Model 2): [notebooks/Model 2.ipynb  ](https://github.com/annajliu110101/Uber-Driver-Pay-Algorithm/blob/main/notebooks/Model%202.ipynb)
+- Milestone 3 notebook (Model 1): [notebooks/Model 1.ipynb  ](https://github.com/annajliu110101/Uber-Driver-Pay-Algorithm/blob/Milestone3/decisiontree-4.py)
